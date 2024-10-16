@@ -2,9 +2,7 @@ package jom.com.softserve.s2.task4;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 class Employee {
     private final BigDecimal basePayment;
@@ -20,6 +18,7 @@ class Employee {
         this.experience = experience;
         this.basePayment = basePayment;
     }
+
 
     @Override
     public boolean equals(Object o) {
@@ -67,12 +66,12 @@ class Employee {
 class Manager extends Employee {
     private final double coefficient;
 
-
     public Manager(String name, int experience, BigDecimal basePayment, double coefficient) {
         super(name, experience, basePayment);
         this.coefficient = coefficient;
 
     }
+
 
     @Override
     public boolean equals(Object o) {
@@ -114,36 +113,56 @@ public class MyUtils {
         if (workers.size() == 1) return workers;
         if (workers.isEmpty()) return new ArrayList<>();
 
-        int maxExperience = 0;
-        BigDecimal maxPayment = BigDecimal.ZERO;
+        int maxExperienceEmployee = 0;
+        int maxExperienceManager = 0;
+        BigDecimal maxEmployeePayment = BigDecimal.ZERO;
+        BigDecimal maxManagerPayment = BigDecimal.ZERO;
 
         for (Employee worker : workers) {
-            if (worker.getExperience() > maxExperience) {
-                maxExperience = worker.getExperience();
-            }
-            if (worker.getPayment().compareTo(maxPayment) > 0) {
-                maxPayment = worker.getPayment();
+            if (worker instanceof Manager) {
+                Manager manager = (Manager) worker;
+                if (manager.getExperience() > maxExperienceManager) {
+                    maxExperienceManager = manager.getExperience();
+                }
+                if (manager.getBasePayment().compareTo(maxManagerPayment) > 0) {
+                    maxManagerPayment = manager.getBasePayment();
+                }
+
+            } else {
+                Employee employee = worker;
+                if (employee.getExperience() > maxExperienceEmployee) {
+                    maxExperienceEmployee = employee.getExperience();
+                }
+                if (employee.getBasePayment().compareTo(maxEmployeePayment) > 0) {
+                    maxEmployeePayment = employee.getBasePayment();
+                }
             }
         }
 
         List<Employee> result = new ArrayList<>();
-        Set<Employee> uniqueEmployees = new HashSet<>();
+
 
         for (Employee employee : workers) {
-            if (employee instanceof Employee) {
-                if (employee.getExperience() == maxExperience || employee.getPayment().equals(maxPayment)) {
-                    result.add(employee);
-                }
-            } else if (employee instanceof Manager) {
-                Manager manager = (Manager) employee;
-                if (manager.getExperience() == maxExperience || manager.getPayment().equals(maxPayment)) {
-                    result.add(manager);
-                }
+
+            if (employee instanceof Manager) {
+                if (employee.getExperience() >= maxExperienceManager) {
+                    addUniqueEmployee(employee, result);
+                } else if (employee.getBasePayment().compareTo(maxManagerPayment) > 0)
+                    addUniqueEmployee(employee, result);
+            } else {
+                if (employee.getExperience() >= maxExperienceEmployee) {
+                    addUniqueEmployee(employee, result);
+                } else if (employee.getBasePayment().compareTo(maxEmployeePayment) >= 0)
+                    addUniqueEmployee(employee, result);
+
             }
-
-
         }
+
         return result;
     }
-}
 
+    private static void addUniqueEmployee(Employee employee, List<Employee> result) {
+        if (! result.contains(employee))
+            result.add(employee);
+    }
+}
