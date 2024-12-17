@@ -1,9 +1,9 @@
 package jom.com.softserve.s2.task1;
 
 public class Child extends Person {
-    int age;
-    String healthInfo;
-    String name;
+    private int age;
+    private String healthInfo;
+    private String name;
     private String childIDNumber;
 
 

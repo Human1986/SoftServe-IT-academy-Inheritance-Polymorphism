@@ -1,10 +1,10 @@
 package jom.com.softserve.s2.task1;
 
 public class Person {
-    String childIDNumber;
-    int age;
-    String healthInfo;
-    String name;
+    private String childIDNumber;
+    private int age;
+    private String healthInfo;
+    private String name;
 
     public Person() {
     }
